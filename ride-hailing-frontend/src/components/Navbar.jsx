@@ -1,4 +1,3 @@
-// src/components/Navbar.jsx
 import {
   AppBar,
   Toolbar,
@@ -9,6 +8,7 @@ import {
   Drawer,
   List,
   ListItem,
+  ListItemButton,
   ListItemText,
   useMediaQuery,
   useTheme,
@@ -19,11 +19,10 @@ import { useState } from "react";
 
 const Navbar = () => {
   const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user")); // assuming user object is stored as string
+  const role = localStorage.getItem("role");
   const navigate = useNavigate();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -32,31 +31,37 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  const menuItems = [
-    ...(token
+  const menuItems = token
+    ? role === "driver"
       ? [
+          { text: "Find Rides", link: "/find-rides" },
+          { text: "Driver Profile", link: "/profile" },
+          { text: "Logout", action: handleLogout },
+        ]
+      : [
           { text: "Book Ride", link: "/book" },
           { text: "Profile", link: "/profile" },
           { text: "Logout", action: handleLogout },
         ]
-      : [
-          { text: "Login", link: "/login" },
-          { text: "Register", link: "/register" },
-        ]),
-  ];
+    : [
+        { text: "Login", link: "/login" },
+        { text: "Register", link: "/register" },
+      ];
 
   const drawerList = (
     <Box sx={{ width: 250 }} onClick={() => setDrawerOpen(false)}>
       <List>
         {menuItems.map((item, index) => (
-          <ListItem
-            button
-            key={index}
-            component={item.link ? Link : "button"}
-            to={item.link || undefined}
-            onClick={item.action || undefined}
-          >
-            <ListItemText primary={item.text} />
+          <ListItem key={index} disablePadding>
+            {item.link ? (
+              <ListItemButton component={Link} to={item.link}>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            ) : (
+              <ListItemButton onClick={item.action}>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            )}
           </ListItem>
         ))}
       </List>
@@ -70,7 +75,11 @@ const Navbar = () => {
           variant="h6"
           component={Link}
           to="/"
-          sx={{ color: "#fff", textDecoration: "none", fontWeight: 600 }}
+          sx={{
+            color: "#fff",
+            textDecoration: "none",
+            fontWeight: 600,
+          }}
         >
           🚖 DoDash
         </Typography>

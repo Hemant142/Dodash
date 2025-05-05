@@ -2,6 +2,8 @@ import { Container, Typography, Paper, Box, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const HomePage = () => {
+  const role = localStorage.getItem("role");
+  console.log(role, "role");
   return (
     <Container maxWidth="md">
       <Paper
@@ -12,17 +14,32 @@ const HomePage = () => {
           Welcome to DoDash 🚕
         </Typography>
         <Typography variant="body1" mb={4}>
-          Book your ride quickly and easily with our reliable service.
+          {role === "driver"
+            ? "Find passengers who need a ride and earn on the go."
+            : "Book your ride quickly and easily with our reliable service."}
         </Typography>
-        <Button
-          component={Link}
-          to="/book"
-          variant="contained"
-          size="large"
-          color="primary"
-        >
-          Book a Ride Now
-        </Button>
+
+        {role === "driver" ? (
+          <Button
+            component={Link}
+            to="/find-rides"
+            variant="outlined"
+            size="large"
+            color="primary"
+          >
+            Look for a Ride
+          </Button>
+        ) : (
+          <Button
+            component={Link}
+            to="/book"
+            variant="contained"
+            size="large"
+            color="primary"
+          >
+            Book a Ride Now
+          </Button>
+        )}
       </Paper>
     </Container>
   );

@@ -1,10 +1,18 @@
-// src/pages/RegisterPage.jsx
 import React, { useState } from "react";
-import { Box, Typography, TextField, Button, Paper, Link } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Link,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import instance from "../api/axios"; // Make sure this is your axios instance
+import instance from "../api/axios";
 
 const RegisterPage = () => {
   const [form, setForm] = useState({
@@ -12,6 +20,8 @@ const RegisterPage = () => {
     email: "",
     password: "",
   });
+
+  const [isDriver, setIsDriver] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -20,10 +30,12 @@ const RegisterPage = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    const formData = isDriver ? { ...form, role: "driver" } : form;
+
     try {
-      const res = await instance.post("/auth/register", form);
+      const res = await instance.post("/auth/register", formData);
       toast.success("Registration successful! Please log in.");
-      setTimeout(() => navigate("/login"), 2000); // Delay to let user see toast
+      setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
       console.error("Registration failed:", err);
       const message =
@@ -78,6 +90,19 @@ const RegisterPage = () => {
             value={form.password}
             onChange={handleChange}
           />
+
+          {/* ✅ Checkbox to register as a driver */}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={isDriver}
+                onChange={(e) => setIsDriver(e.target.checked)}
+              />
+            }
+            label="Register as a Driver"
+            sx={{ mt: 1 }}
+          />
+
           <Button
             type="submit"
             variant="contained"
@@ -87,6 +112,7 @@ const RegisterPage = () => {
           >
             Register
           </Button>
+
           <Typography textAlign="center" sx={{ mt: 2 }}>
             Already have an account?{" "}
             <Link href="/login" underline="hover">

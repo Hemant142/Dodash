@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import Navbar from "./components/Navbar";
+// import Navbar from "./components/Navbar";
 import RideStatusPage from "./pages/RideStatusPage";
 import RideBookingPage from "./pages/RideBookingPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -10,6 +10,8 @@ import { Route, Routes } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import Profile from "./pages/Profile";
+import Navbar from "./components/Navbar";
+import FindRides from "./pages/FindRides";
 
 function App() {
   const { loading } = useAuth(); // ✅ Access loading state
@@ -44,6 +46,14 @@ function App() {
           element={
             <PrivateRoute>
               <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/find-rides"
+          element={
+            <PrivateRoute>
+              <FindRides />
             </PrivateRoute>
           }
         />

@@ -1,6 +1,15 @@
 // src/pages/LoginPage.jsx
 import React, { useState } from "react";
-import { Box, Typography, TextField, Button, Paper, Link } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Link,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import instance from "../api/axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -11,18 +20,20 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const res = await instance.post("/auth/login", { email, password });
       const { token, user } = res.data;
-      console.log(res);
+
       localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user.name));
+      localStorage.setItem("user", user.name);
+      localStorage.setItem("role", user.role);
       navigate("/");
     } catch (err) {
-      console.error("Login failed:", err);
-
       const message =
         err.response?.data?.message || err.message || "Something went wrong!";
       toast.error(`Login failed: ${message}`);
@@ -34,17 +45,28 @@ const LoginPage = () => {
       display="flex"
       justifyContent="center"
       alignItems="center"
-      height="80vh"
+      height="100vh"
+      px={2}
     >
-      <Paper elevation={4} sx={{ p: 4, width: 350, borderRadius: 3 }}>
+      <Paper
+        elevation={4}
+        sx={{
+          p: isSmallScreen ? 3 : 5,
+          width: isSmallScreen ? "100%" : 400,
+          borderRadius: 3,
+          maxWidth: "100%",
+        }}
+      >
         <Typography
           variant="h5"
           gutterBottom
           textAlign="center"
           color="primary"
+          fontWeight="bold"
         >
           Welcome Back
         </Typography>
+
         <form onSubmit={handleLogin}>
           <TextField
             label="Email"
@@ -83,6 +105,7 @@ const LoginPage = () => {
           </Typography>
         </form>
       </Paper>
+
       <ToastContainer position="top-center" autoClose={3000} />
     </Box>
   );
