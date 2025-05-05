@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 
 const HomePage = () => {
   const role = localStorage.getItem("role");
+  const token = localStorage.getItem("token");
   console.log(role, "role");
+  console.log(token, "token");
   return (
     <Container maxWidth="md">
       <Paper

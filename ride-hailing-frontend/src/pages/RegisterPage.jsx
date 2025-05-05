@@ -115,7 +115,7 @@ const RegisterPage = () => {
 
           <Typography textAlign="center" sx={{ mt: 2 }}>
             Already have an account?{" "}
-            <Link href="/login" underline="hover">
+            <Link to="/login" underline="hover">
               Login
             </Link>
           </Typography>

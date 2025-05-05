@@ -7,7 +7,9 @@ import { bookRide } from "../api/bookRide";
 const RideBookingPage = () => {
   const [pickup, setPickup] = useState(null);
   const [drop, setDrop] = useState(null);
+  const [rideStatus, setRideStatus] = useState("initial"); // initial, finding, confirmed, completed
   const token = localStorage.getItem("token");
+
   const calculateFare = (start, end) => {
     const distanceInKm = getDistanceInKm(start, end); // implement with haversine formula or Google API
     return Math.max(50, Math.round(distanceInKm * 15)); // min fare ₹50, ₹15/km
@@ -34,16 +36,24 @@ const RideBookingPage = () => {
 
   const handleConfirmRide = () => {
     console.log("Confirmed ride from", pickup, "to", drop);
-    // Send to backend here
+    // Set status to 'finding' to simulate finding driver
+    setRideStatus("finding");
 
     const fare = calculateFare(pickup, drop); // define as needed
     console.log(fare, "fare");
+
+    // Simulating booking and assigning the driver after 3 seconds
+    setTimeout(() => {
+      // After driver found, update status
+      setRideStatus("confirmed");
+    }, 3000); // simulate 3 seconds for finding the driver
+
+    // Send to backend here
     bookRide({
       pickupAddress: pickup,
       dropoffAddress: drop,
       fare,
       token,
-      // driverId: "64f123abc456...", // real or dummy driver ID
     });
   };
 
@@ -98,14 +108,20 @@ const RideBookingPage = () => {
       <MapSelector pickup={pickup} drop={drop} setDrop={setDrop} />
 
       <Box mt={3} display="flex" justifyContent="center">
-        <Button
-          variant="contained"
-          sx={{ backgroundColor: "#244c9c", px: 4, py: 1.5 }}
-          onClick={handleConfirmRide}
-          disabled={!pickup || !drop}
-        >
-          Confirm Ride
-        </Button>
+        {rideStatus === "finding" ? (
+          <Typography variant="body1" color="text.secondary">
+            🚗 Finding a driver...
+          </Typography>
+        ) : (
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: "#244c9c", px: 4, py: 1.5 }}
+            onClick={handleConfirmRide}
+            disabled={!pickup || !drop || rideStatus === "finding"}
+          >
+            Confirm Ride
+          </Button>
+        )}
       </Box>
     </Box>
   );

@@ -3,10 +3,11 @@ import { useAuth } from "../context/AuthContext";
 
 const PrivateRoute = ({ children }) => {
   //   const { user, loading } = useAuth();
-  const user = localStorage.getItem("user");
+  const token = localStorage.getItem("token");
+  console.log(token, "token");
   //   if (loading) return <div>Loading...</div>; // Optional: Spinner
 
-  return user ? children : <Navigate to="/login" replace />;
+  return token ? children : <Navigate to="/login" replace />;
 };
 
 export default PrivateRoute;
