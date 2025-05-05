@@ -5,11 +5,10 @@ import {
   TextField,
   Button,
   Paper,
-  Link,
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import instance from "../api/axios";
