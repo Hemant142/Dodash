@@ -12,7 +12,7 @@ const authRoutes = express.Router();
 authRoutes.post("/register", register);
 authRoutes.post("/login", login);
 authRoutes.get("/getAllUsers", getAllUsers);
-authRoutes.get("/profile/:id", verifyToken, getProfile);
-authRoutes.put("/profile/:id", verifyToken, updateProfile);
+authRoutes.get("/profile", verifyToken, getProfile);
+authRoutes.put("/profile", verifyToken, updateProfile);
 
 export default authRoutes;

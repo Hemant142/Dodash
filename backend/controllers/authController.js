@@ -56,10 +56,10 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-// get Profile
+// Get Profile using token-extracted userId
 export const getProfile = async (req, res) => {
   try {
-    const userId = req.params.id; // ✅ get ID from params
+    const userId = req.userId;
     const user = await User.findById(userId).select("-password");
 
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -70,10 +70,10 @@ export const getProfile = async (req, res) => {
   }
 };
 
-// Update Profile
+// Update Profile using token-extracted userId
 export const updateProfile = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.userId;
     const updates = req.body;
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -86,9 +86,7 @@ export const updateProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res
-      .status(200)
-      .json({ message: "Profile updated successfully", user: updatedUser });
+    res.status(200).json({ message: "Profile updated", user: updatedUser });
   } catch (error) {
     res.status(500).json({ message: "Could not update profile", error });
   }
